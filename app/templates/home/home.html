@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1 , user-scalable=no">
+    <title>Movie System</title>
+    <link rel="shortcut icon" href="{{ url_for('static',filename='/base/images/logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='base/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='base/css/bootstrap-movie.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='base/css/animate.css') }}">
+    <script type="text/javascript" src="{{ url_for('static',filename='base/js/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='base/js/jquery.md5.js') }}"></script>
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <style>
+        .navbar-brand > img {
+            display: inline;
+        }
+
+        .media {
+            padding: 3px;
+            border: 1px solid #ccc
+        }
+
+        .myform {
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            padding: 1rem;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            width: 100%;
+            pointer-events: auto;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid rgba(0, 0, 0, .2);
+            border-radius: 1.1rem;
+            outline: 0;
+        {#max-width: 500px;#}
+        }
+
+        .tx-tfm {
+            text-transform: uppercase;
+        }
+
+        .mybtn {
+            border-radius: 50px;
+        }
+
+        .login-or {
+            position: relative;
+            color: #aaa;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .span-or {
+            display: block;
+            position: absolute;
+            left: 50%;
+            top: -2px;
+            margin-left: -25px;
+            background-color: #fff;
+            width: 50px;
+            text-align: center;
+        }
+
+        .hr-or {
+            height: 1px;
+            margin-top: 0px !important;
+            margin-bottom: 0px !important;
+        }
+
+        .google {
+            color: #666;
+            width: 100%;
+            height: 40px;
+            text-align: center;
+            outline: none;
+            border: 1px solid lightgrey;
+        }
+
+        form .error {
+            color: #ff0000;
+        }
+
+        #second {
+            display: none;
+        }
+
+        .buscar-caja {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            border-radius: 40px;
+            padding: 10px;
+        }
+
+        .buscar-caja:hover > .buscar-txt {
+            width: 240px;
+            padding: 0 6px;
+        }
+
+        .buscar-caja:hover > .buscar-btn {
+            background: white;
+            color: #fd79a8;
+        }
+
+        .buscar-btn {
+
+            float: right;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #fd79a8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.4s;
+            color: white;
+            cursor: pointer;
+        }
+
+        .buscar-btn > i {
+            font-size: 17px;
+        }
+
+        .buscar-txt {
+            border: none;
+            background: none;
+            outline: none;
+            float: left;
+            padding: 0;
+            color: #333;
+            font-size: 16px;
+            transition: 0.4s;
+            line-height: 40px;
+            width: 0px;
+            border-radius: 40px;
+            font-weight: bold;
+        }
+
+        .buscar-txt:hover, .buscar-txt:focus {
+            border: 2px solid pink;
+        }
+
+        .btn-pink{
+            background-color: #fd79a8;
+            color: white;
+        }
+        .btn-pink:hover{
+            background-color: pink;
+            color: white;
+        }
+
+    </style>
+    {% block css %}
+    {% endblock %}
+</head>
+
+<body>
+<!--导航-->
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <!--小屏幕导航按钮和logo-->
+        <div class="navbar-header">
+            <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="{{ url_for('home.index') }}" class="navbar-brand" style="width:auto;color:#b2bec3">
+                <img src="{{ url_for('static',filename='static/base/images/logo.png') }}" style="height:30px;">
+                Movie System
+            </a>
+        </div>
+        <!--小屏幕导航按钮和logo-->
+        <!--导航-->
+        <div class="navbar-collapse collapse">
+            {#            <div class="navbar-form navbar-left" role="search" style="margin-top:18px">#}
+            {#                <div class="form-group input-group">#}
+            {#                    <input type="text" class="form-control" id="search_text" placeholder="Please enter key words"#}
+            {#                           value="{{ keys }}">#}
+            {#                    <span class="input-group-btn">#}
+            {#                        <a class="btn btn-default" id="search"><span#}
+            {#                                class="glyphicon glyphicon-search"></span>&nbsp;Search</a>#}
+            {#                    </span>#}
+            {#                </div>#}
+            {#            </div>#}
+            <div class="buscar-caja">
+                <input type="text" name="search_text" id="search_text" class="buscar-txt" placeholder="Search"
+                       value="{{ keys }}"/>
+                <a class="buscar-btn" id="search"> <i class="fa fa-search"></i> </a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="curlink" href="{{ url_for('home.index') }}"><span class="glyphicon glyphicon-film"></span>&nbsp;Film</a>
+                </li>
+
+                {% if user %}
+                    <li>
+                        <a class="curlink" href="{{ url_for('home.user') }}" style="color:#fd79a8"><span
+                                class="glyphicon glyphicon-user"></span>&nbsp;
+                            {{ user.name }}
+                        </a>
+                    </li>
+                    <li>
+                        <a class="curlink" href="{{ url_for('home.logout') }}?redirectedfrom={{ route }}"><span
+                                class="glyphicon glyphicon-log-out"></span>&nbsp;Exit</a>
+                    </li>
+
+                {% else %}
+                    <li>
+                        <a class="curlink" href="{{ url_for('home.register') }}?redirectedfrom={{ route }}"><span
+                                class="glyphicon glyphicon-plus"></span>&nbsp;Regist</a>
+                    </li>
+                    <li>
+                        <a class="curlink" href="{{ url_for('home.login') }}?redirectedfrom={{ route }}"><span
+                                class="glyphicon glyphicon-log-in"></span>&nbsp;Login</a>
+                    </li>
+                    <li>
+                        <a class="curlink" href="{{ url_for('home.user') }}"><span
+                                class="glyphicon glyphicon-user"></span>&nbsp;
+                            Guest
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+        <!--导航-->
+
+    </div>
+</nav>
+<!--导航-->
+<!--内容-->
+<div class="container" style="margin-top:87px">
+    {% block content %}
+
+    {% endblock %}
+</div>
+<!--内容-->
+<!--底部-->
+{#<footer class="mt-4 bg-dark text-light small">#}
+{#    <div class="container">#}
+{#        <div class="row">#}
+{#            <div class="col-md-12">#}
+{#                <p>#}
+{#                    ©&nbsp;2022&nbsp;movie.rec.com&nbsp;Modified by @lijunjie2232&nbsp;xxICP备 xxxxxxxx号-xx#}
+{#                </p>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</footer>#}
+<!--底部-->
+<script src="{{ url_for('static',filename='base/js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static',filename='base/js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static',filename='base/js/jquery.singlePageNav.min.js') }}"></script>
+<script src="{{ url_for('static',filename='base/js/wow.min.js') }}"></script>
+<script src="{{ url_for('static',filename='lazyload/jquery.lazyload.min.js') }}"></script>
+<script src="//cdn.bootcss.com/holder/2.9.4/holder.min.js"></script>
+<script>
+    $(function () {
+        new WOW().init();
+    })
+
+</script>
+<script>
+
+
+    $(document).ready(function () {
+        $("img.lazy").lazyload({
+            effect: "fadeIn"
+        });
+        {#if (window.location.pathname.indexOf("/play") >= 0) {#}
+        {#    rec();}#}
+    });
+
+
+    $('#search').click(function () {
+        keys = $('#search_text').val();
+        keys = keys.replace(' ', '+');
+        {#console.log(keys);#}
+        window.location.href = {{ url_for('home.search') }} +'?keys=' + keys;
+    });
+
+</script>
+{% block js %}{% endblock %}
+</body>
+</html>
+

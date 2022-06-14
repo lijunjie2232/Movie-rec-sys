@@ -1,0 +1,212 @@
+{% extends "home/home.html" %}
+{% block content %}
+
+    {% block css %}
+        <style>
+            .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+                padding-right: 3px;
+                padding-left: 3px;
+            }
+
+            .panel-heading {
+                border-radius: 17px 17px 0 0;
+            }
+
+            .panel-body {
+                border-radius: 0 0 17px 17px;
+            }
+
+            .form-control {
+                border-radius: 17px;
+            }
+
+            table {
+                border-collapse: separate;
+                border-spacing: 0;
+                border-radius: 17px;
+                border: solid 1px #ccc;
+            }
+
+            th, td {
+                border-top: 0 !important;
+                border-bottom: 1px solid #ccc;
+                text-align: center;
+                height: 37px;
+            }
+
+            td {
+                text-align: center;
+                height: 57px !important;
+                border-bottom: 0 !important;
+                border-top: 1px solid #ccc !important;
+            }
+        </style>
+    {% endblock %}
+    {% include "home/menu.html" %}
+    <div class="col-md-9">
+        <div class="panel panel-warning" style="border-radius: 17px">
+            <div class="panel-heading">
+                <h3 class="panel-title"><span class="glyphicon glyphicon-map-marker"></span>&nbsp;Login Log</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        {#                        <th style="width:10%">ID</th>#}
+                        <th style="width:30%">Login Time</th>
+                        <th style="width:30%">Login IP</th>
+                        <th style="width:30%">Login Address</th>
+                    </tr>
+                    {% for item in loginlogs %}
+                        <tr>
+                            {#                            <td>{{ item.id }}</td>#}
+                            <td>{{ item.time }}</td>
+                            <td>{{ item.ip }}</td>
+                            <td>
+                                <script type="text/javascript">
+                                    var myAddress = '';
+                                    $.ajax({
+                                        url: 'https://ipapi.co/{{ item.ip }}/json/',
+                                        type: 'GET',
+                                        dataType: 'json',
+                                        async: false,
+                                        success: function (data) {
+                                            if (data.error) {
+                                                document.write(data.reason);
+                                            } else {
+                                                if (data.city) {
+                                                    myAddress += data.city + ',  ';
+                                                }
+                                                if (data.region) {
+                                                    myAddress += data.region + ',  ';
+                                                }
+                                                if (data.country_name) {
+                                                    myAddress += data.country_name;
+                                                }
+                                                document.write(myAddress);
+                                            }
+                                        },
+                                        error: function (data) {
+                                            document.write('Unknown');
+                                        }
+                                    });
+                                </script>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tr>
+                </table>
+                <div class="col-md-12 text-center" style="margin-top:17px;{% if not loginlogs %}display:none{% endif %}">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <li>
+                                <a aria-label="First" onclick="page_first()"
+                                   style="border-radius: 27px 0 0 27px;width:77px;">
+                                    <span aria-hidden="true">首页</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a aria-label="Previous" onclick="page_previous()">
+                                    <span aria-hidden="true">上一页</span>
+                                </a>
+                            </li>
+                            <li><a><span id="page" value="{{ page }}">
+                                {% if page %}
+                                    {{ page }}
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </span>&nbsp;
+                                /&nbsp;
+                                <span id="num" value="{{ num }}">
+                                    {% if num %}
+                                        {{ num }}
+                                    {% else %}
+                                        0
+                                    {% endif %}
+                                </span></a></li>
+                            <li>
+                                <a aria-label="Next" onclick="page_next()">
+                                    <span aria-hidden="true">下一页</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a aria-label="Last" onclick="page_last()"
+                                   style="border-radius: 0 27px 27px 0;width:77px;">
+                                    <span aria-hidden="true">尾页</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var url = window.location.href;
+        var page = {{ page }};
+        var num = {{ num }};
+
+        function getUrl(p = page) {
+            var url = '{{ url_for('home.loginlog') }}';
+            if (p) {
+                if (p > num) {
+                    url += '?page=' + num;
+                } else if (p < 1) {
+                    url += '?page=1';
+                } else {
+                    url += '?page=' + p;
+                }
+            } else {
+                url += '?page=1';
+            }
+            return url;
+        }
+
+        function page_last() {
+            if (page < num) {
+                window.location.href = getUrl(num);
+            } else {
+                alert('Already the last page');
+            }
+        }
+
+        function page_next() {
+            if (page < num) {
+                window.location.href = getUrl(page + 1);
+            } else {
+                alert('Already the last page');
+            }
+        }
+
+        function page_previous() {
+            if (page > 1) {
+                window.location.href = getUrl(page - 1);
+            } else {
+                alert('Already the first page');
+            }
+        }
+
+        function page_first() {
+            if (page > 1) {
+                window.location.href = getUrl(1);
+            } else {
+                alert('Already the first page');
+            }
+        }
+
+        $(document).ready(function () {
+            $("img.lazy").lazyload({
+                effect: "fadeIn"
+            });
+        });
+
+    </script>
+{% endblock %}
+{% block js %}
+    <script>
+        $(document).ready(function () {
+            $('#m-4').addClass('active')
+        });
+    </script>
+{% endblock %}

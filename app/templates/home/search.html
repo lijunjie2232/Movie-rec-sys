@@ -1,0 +1,166 @@
+{% extends "home/home.html" %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb" style="margin-top:6px; border-radius: 7px">
+                <li>There are {{ _num }} movies related with "{{ keys }}"</li>
+            </ol>
+        </div>
+        <div class="col-md-12">
+            {% for v in movielist %}
+                <div class="media" style="height:200px; border-radius: 17px">
+                    <div class="media-left">
+                        <a href="{{ url_for('home.play', id=v.id) }}">
+                            <img class="media-object" src="{{ v.poster }}" alt="Poster temporarily unavailable"
+                                 height="190" width="130" style="border-radius: 17px">
+                        </a>
+                    </div>
+                    <div class="media-body" style="height:90px; margin:20px; padding:10px">
+                        <h4 class="media-heading" style="margin-top:10px; height:30%; padding-right:20px">
+                            <a href="{{ url_for('home.play', id=v.id) }}"
+                               style="font-weight:bold; color:black; text-decoration-line: none;">{{ v.title }}</a>
+                            <a id="play" target="_blank" href="https://www.imdb.com/title/{{ v.urlId }}"
+                               value="{{ v.urlId }}"
+                               class="label label-primary pull-right"
+                               style="width:77px; padding: 6px; border-radius:17px"><span
+                                    class="glyphicon glyphicon-play"></span> Play</a></h4>
+                        <div style=" margin-top:15px;">
+                            <a href="{{ url_for('home.play', id=v.id) }}"
+                               style=" color:black; text-decoration-line: none;">
+                                {% if v.storyline|length > 520 %}
+                                    {{ v.storyline[0:520]|safe }} ...
+                                {% elif v.storyline|length >0 %}
+                                    {{ v.storyline|safe }}
+                                {% else %}
+                                    暂无简介
+                                {% endif %}
+                            </a></div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+        <div class="col-md-12 text-center">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li>
+                        <a aria-label="First" onclick="page_first()"
+                           style="border-radius: 27px 0 0 27px;width:77px;">
+                            <span aria-hidden="true">首页</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a aria-label="Previous" onclick="page_previous()">
+                            <span aria-hidden="true">上一页</span>
+                        </a>
+                    </li>
+                    <li><a><span
+                            style="border: 1px solid #007bb6;height:100%;padding:2px;border-radius:17px;"><input
+                            type="number" id="page" value="{{ page }}"
+                            style="width:57px;height:17px;border-radius:17px;border:2px;"><bottom
+                            id="turn"><spam
+                            class="glyphicon glyphicon-chevron-right"></spam></bottom></span>&nbsp;
+                        /&nbsp;
+                        <span id="num" value="{{ num }}">
+                                    {% if num %}
+                                        {{ num }}
+                                    {% else %}
+                                        1
+                                    {% endif %}
+                                </span></a></li>
+                    <li>
+                        <a aria-label="Next" onclick="page_next()">
+                            <span aria-hidden="true">下一页</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a aria-label="Last" onclick="page_last()"
+                           style="border-radius: 0 27px 27px 0;width:77px;">
+                            <span aria-hidden="true">尾页</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var url = window.location.href;
+
+        function getQueryString(name) {
+            const str = new URL(url);
+            return str.searchParams.get(name);
+        }
+
+        var page = Number(getQueryString('page'));
+        var keys = getQueryString('keys');
+        var num = Number($("#num").attr('value'));
+
+        if (!page) {
+            page = 1;
+        }
+
+        function getUrl(p = page) {
+            var url = '{{ url_for('home.search') }}';
+            if (p) {
+                if (p > num) {
+                    url += '?page=' + num;
+                } else if (p < 1) {
+                    url += '?page=1';
+                } else {
+                    url += '?page=' + p;
+                }
+            } else {
+                url += '?page=1';
+            }
+            url += '&keys=' + keys;
+            return url;
+        }
+
+        function page_last() {
+            if (page < num) {
+                window.location.href = getUrl(num);
+            } else {
+                alert('Already the last page');
+            }
+        }
+
+        function page_next() {
+            if (page < num) {
+                window.location.href = getUrl(page + 1);
+            } else {
+                alert('Already the last page');
+            }
+        }
+
+        function page_previous() {
+            if (page > 1) {
+                window.location.href = getUrl(page - 1);
+            } else {
+                alert('Already the first page');
+            }
+        }
+
+        function page_first() {
+            if (page > 1) {
+                window.location.href = getUrl(1);
+            } else {
+                alert('Already the first page');
+            }
+        }
+
+        $('#turn').click(function turn_to_page() {
+            var p = Number($('#page').val());
+            if (p == page) {
+                alert('Already the page');
+            } else if (p >= num) {
+                window.location.href = getUrl(num);
+            } else if (p <= 1) {
+                window.location.href = getUrl(1);
+            } else {
+                window.location.href = getUrl(p);
+            }
+        });
+    </script>
+
+{% endblock %}

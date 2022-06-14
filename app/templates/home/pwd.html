@@ -1,0 +1,111 @@
+{% extends "home/home.html" %}
+{% block content %}
+
+    {% block css %}
+        <style>
+            .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+                padding-right: 3px;
+                padding-left: 3px;
+            }
+
+            .panel-heading {
+                border-radius: 17px 17px 0 0;
+            }
+
+            .panel-body {
+                border-radius: 0 0 17px 17px;
+            }
+
+            .form-control {
+                border-radius: 17px;
+            }
+        </style>
+    {% endblock %}
+    {% include "home/menu.html" %}
+    <div class="col-md-9">
+        <div class="panel panel-warning" style="border-radius: 17px">
+            <div class="panel-heading">
+                <h3 class="panel-title"><span class="glyphicon glyphicon-map-marker"></span>&nbsp;User Profile</h3>
+            </div>
+            <div class="panel-body">
+                <form role="form">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="input_oldpwd"><span class="glyphicon glyphicon-lock"></span>&nbsp;Old
+                                Password</label>
+                            <input id="input_oldpwd" class="form-control" placeholder="old" name="oldpwd"
+                                   type="password" autofocus>
+                        </div>
+                        <div class="col-md-12" id="error_oldpwd"></div>
+                        <div class="form-group">
+                            <label for="input_newpwd"><span class="glyphicon glyphicon-lock"></span>&nbsp;New
+                                Password</label>
+                            <input id="input_newpwd" class="form-control" placeholder="new" name="newpwd"
+                                   type="password" autofocus>
+                        </div>
+                        <div class="form-group">
+                            <label for="input_repwd"><span class="glyphicon glyphicon-lock"></span>&nbsp;Confirm
+                                Password</label>
+                            <input id="input_repwd" class="form-control" placeholder="Confirm Password" name="repwd"
+                                   type="password" autofocus>
+                        </div>
+                        <div class="col-md-12" id="error_newpwd"></div>
+                        <a class="btn btn-success" style="border-radius: 17px" id="pwd_change"><span
+                                class="glyphicon glyphicon-edit"></span>&nbsp;Change
+                            Password</a>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        $(document).ready(function () {
+            $('#m-2').addClass('active')
+        });
+    </script>
+    <script type="text/javascript">
+        $("#pwd_change").click(function () {
+            if ($("#input_oldpwd").val() == "") {
+                alert("Please input old password");
+                $("#input_oldpwd").focus();
+            } else if ($("#input_newpwd").val() == "") {
+                alert("Please input new password");
+                $("#input_newpwd").focus();
+            } else if ($("#input_repwd").val() == "") {
+                alert("Please input confirm password");
+                $("#input_repwd").focus();
+            } else if ($("#input_newpwd").val() != $("#input_repwd").val()) {
+                alert("Confirm password is not same as new password");
+                $("#input_repwd").focus();
+            } else if ($("#input_oldpwd").val() == $("#input_newpwd").val()) {
+                alert("Old password is same as new password");
+                $("#input_newpwd").focus();
+            } else {
+                data = {
+                    "flag": "change",
+                    "oldpwd": $("#input_oldpwd").val(),
+                    "newpwd": $("#input_newpwd").val(),
+                    "repwd": $("#input_repwd").val()
+                },
+                    $.ajax({
+                        url: "{{ url_for('home.pwd') }}",
+                        type: "POST",
+                        dataType: "json",
+                        data: JSON.stringify(data),
+                        success: function (data) {
+                            alert(data.msg);
+                            if (data.code == 200) {
+                                window.location.href = "{{ url_for('home.logout') }}?redirectedfrom={{ url_for('home.user') }}";
+                            }
+                        },
+                        error: function () {
+                            alert("Please check your network");
+                        }
+                    });
+            }
+
+        });
+    </script>
+{% endblock %}

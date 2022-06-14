@@ -1,0 +1,85 @@
+/*可以在这里添加你自己的css*/
+.edui-default {
+    line-height: 1.5em;
+}
+
+.edui-default .edui-for-code {
+    overflow-x: auto;
+    word-wrap: normal !important;
+}
+
+.edui-default .edui-for-code, pre {
+    padding: 3px 4px;
+}
+
+.edui-default .edui-for-code .edui-for-code-title {
+    font-weight: 700;
+}
+
+.edui-default .edui-for-code-desc, pre {
+    font-size: 12px;
+    color: #333;
+}
+
+.edui-default .edui-for-code-desc {
+    padding: 5px 0;
+}
+
+.edui-default .edui-for-code-desc a {
+    color: #333;
+}
+
+.edui-default .edui-for-code-desc a:hover {
+    text-decoration: underline;
+}
+
+.edui-default .edui-for-code-desc a:active {
+    color: #333;
+}
+
+.edui-default .edui-for-code-desc a:visited {
+    color: #333;
+}
+
+.edui-default .edui-for-code-desc a:focus {
+    color: #333;
+}
+
+.edui-default .edui-for-code-desc a:hover {
+    color: #333;
+}
+
+#edui1 {
+    border-radius: 17px;
+}
+
+.edui-editor-toolbarbox {
+    /*border: 1px solid #fd79a8;*/
+    border-radius: 17px 17px 0 0 !important;
+}
+
+.edui-editor-toolbarboxouter {
+    border-radius: 17px 17px 0 0 !important;
+}
+
+#edui1_iframeholder {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ccc;
+    border-radius: 0 0 17px 17px !important;
+}
+
+#edui1_iframeholder:hover {
+    border: 1px solid #fd79a8 !important;
+}
+
+.edui-editor-wordcount {
+    border-top: 0 !important;
+}
+
+.edui-editor {
+    border: 2px solid #fd79a8;
+    border-radius: 7px;
+    padding: 10px;
+    margin-bottom: 10px;
+}

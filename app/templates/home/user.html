@@ -1,0 +1,198 @@
+{% extends "home/home.html" %}
+{% block content %}
+
+    {% block css %}
+        <style>
+            .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+                padding-right: 3px;
+                padding-left: 3px;
+            }
+
+            .panel-heading {
+                border-radius: 17px 17px 0 0;
+            }
+
+            .panel-body {
+                border-radius: 0 0 17px 17px;
+            }
+
+            .form-control {
+                border: 1px solid #ccc;
+                border-radius: 17px;
+            }
+        </style>
+    {% endblock %}
+    {% include "home/menu.html" %}
+    <div class="col-md-9">
+        <div class="panel panel-warning" style="border-radius: 17px">
+            <div class="panel-heading">
+                <h3 class="panel-title"><span class="glyphicon glyphicon-map-marker"></span>&nbsp;User Profile</h3>
+            </div>
+            <div class="panel-body">
+                <form role="form">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="input_name"><span class="glyphicon glyphicon-user"></span>&nbsp;Username</label>
+                            <input id="username" class="form-control" placeholder="username" name="name" type="text"
+                                   value="{{ user.name }}">
+                        </div>
+                        <div class="col-md-12" id="error_name"></div>
+                        <div class="form-group">
+                            <label for="input_email"><span
+                                    class="glyphicon glyphicon-envelope"></span>&nbsp;Email</label>
+                            <input id="email" class="form-control" placeholder="email" name="email" type="email"
+                                   autofocus value="{{ user.email }}">
+                        </div>
+                        <div class="col-md-12" id="error_email"></div>
+                        <div class="form-group">
+                            <label for="input_phone"><span class="glyphicon glyphicon-phone"></span>&nbsp;Phone</label>
+                            <input id="phn" class="form-control" placeholder="phone number" name="phone" type="text"
+                                   autofocus
+                                   value="{{ user.phone }}">
+                        </div>
+                        {#                        <div class="col-md-12" id="error_phone"></div>#}
+                        {#                        <div class="form-group">#}
+                        {#                            <label for="input_face"><span class="glyphicon glyphicon-picture"></span>&nbsp;头像</label>#}
+                        {#                            <img src="holder.js/100x100" class="img-responsive img-rounded">#}
+                        {#                            <a class="btn btn-primary" style="margin-top:6px;"><span#}
+                        {#                                    class="glyphicon glyphicon-open"></span>&nbsp;上传头像</a>#}
+                        {#                            <input id="input_face" class="form-control" name="face" type="hidden" autofocus>#}
+                        {#                        </div>#}
+                        {#                        <div class="col-md-12" id="error_face"></div>#}
+                        <div class="form-group">
+                            <label for="input_info"><span
+                                    class="glyphicon glyphicon-edit"></span>&nbsp;Introduction</label>
+                            <textarea class="form-control" rows="10" id="input_info">{% if user.info %}{{ user.info }}{% endif %}</textarea>
+                        </div>
+                        <div class="col-md-12" id="error_info"></div>
+                        <a class="btn btn-success pull-right" style="width:128px;border-radius: 17px" id="profile_change">
+                            <span class="glyphicon glyphicon-saved"></span>&nbsp;Save</a>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        $(document).ready(function () {
+            $('#m-1').addClass('active')
+        });
+    </script>
+    <script type="text/javascript">
+
+        function vailPhone() {
+            var phone = jQuery("#phn").val();
+            var flag = false;
+            var message = "";
+            var myreg = /^(1\d{10})$/;
+            if (phone == '') {
+                message = "手机号码不能为空！";
+            } else if (phone.length != 11) {
+                message = "请输入有效的手机号码！";
+            } else if (!myreg.test(phone)) {
+                message = "请输入有效的手机号码！";
+            } else {
+                flag = true;
+            }
+            if (!flag) {
+                $("#phn").css("border-color", "#d63031");
+                {#alert(message);#}
+            } else {
+                $("#phn").css("border-color", "#00b894");
+            }
+            return flag;
+        }
+
+        function vailEmail() {
+            var email = jQuery("#email").val();
+            var flag = false;
+            var message = "";
+            var myreg = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+            if (email == '') {
+                message = "邮箱不能为空！";
+            } else if (!myreg.test(email)) {
+                message = "请输入有效的邮箱地址！";
+            } else {
+                flag = true;
+            }
+            if (!flag) {
+                $("#email").css("border-color", "#d63031");
+                {#alert(message);#}
+            } else {
+                $("#email").css("border-color", "#00b894");
+            }
+            return flag;
+        }
+
+        function vailUsername() {
+            var username = jQuery("#username").val();
+            var flag = false;
+            var message = "";
+            var myreg = /^[a-zA-Z0-9_-]{4,37}$/;
+            if (username == '') {
+                message = "用户名不能为空！";
+            } else if (!myreg.test(username)) {
+                message = "用户名只能由4-37位字母、数字、下划线和减号组成！";
+            } else {
+                flag = true;
+            }
+            if (!flag) {
+                $("#username").css("border-color", "#d63031");
+                {#alert(message);#}
+            } else {
+                $("#username").css("border-color", "#00b894");
+            }
+            return flag;
+        }
+
+        $("#username").blur(function () {
+            vailUsername();
+        })
+
+        $("#email").blur(function () {
+            vailEmail();
+        })
+
+        $("#phn").blur(function () {
+            vailPhone();
+        })
+
+        $("#profile_change").click(function () {
+            if ($("#username").val() == "") {
+                alert("Please input your name!");
+                $("#username").focus();
+            } else if ($("#email").val() == "") {
+                alert("Please input your email!");
+                $("#email").focus();
+            } else if ($("#phn").val() == "") {
+                alert("Please input your phone!");
+                $("#phn").focus();
+            } else {
+                data = {
+                    "flag": "change",
+                    "username": $("#username").val(),
+                    "email": $("#email").val(),
+                    "phn": $("#phn").val(),
+                    "intro": $("#input_info").val()
+                },
+                    $.ajax({
+                        url: "{{ url_for('home.user') }}",
+                        type: "POST",
+                        dataType: "json",
+                        data: JSON.stringify(data),
+                        success: function (data) {
+                            alert(data.msg);
+                            if (data.code == 200) {
+                                window.location.href = "{{ url_for('home.logout') }}?redirectedfrom={{ url_for('home.user') }}";
+                            }
+                        },
+                        error: function () {
+                            alert("Please check your network");
+                        }
+                    });
+            }
+
+        });
+    </script>
+{% endblock %}

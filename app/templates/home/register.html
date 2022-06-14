@@ -1,0 +1,299 @@
+{% extends "home/home.html" %}
+{% block content %}
+    <div class="row" style="margin-top:27px;color:#666">
+        <div class="col-md-6 col-md-offset-3 mx-auto">
+            <div class="myform form" style="padding:7%">
+                <div class="logo mb-3">
+                    <div class="col-md-12 text-center">
+                        <h1>Signup</h1>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Username</label>
+                    <input type="text" name="username" class="form-control" id="username"
+                           aria-describedby="emailHelp" placeholder="Enter Username"
+                           style="border-radius:20px">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email</label>
+                    <input type="text" name="email" class="form-control" id="email"
+                           aria-describedby="emailHelp" placeholder="Enter Email"
+                           style="border-radius:20px">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Phone Number</label>
+                    <input type="email" name="phn" class="form-control" id="phn"
+                           aria-describedby="emailHelp" placeholder="Enter phone number"
+                           style="border-radius:20px">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Password</label>
+                    <input type="password" name="password" id="password" class="form-control"
+                           aria-describedby="emailHelp" placeholder="Enter Password"
+                           style="border-radius:20px">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Confirm password</label>
+                    <input type="password" name="repassword" id="repassword" class="form-control"
+                           aria-describedby="emailHelp" placeholder="Enter password again"
+                           style="border-radius:20px">
+                </div>
+                <div class="form-group" style="margin-top:17px">
+                    <p class="text-center">By signing up you accept our <a href="#">Terms Of Use</a></p>
+                </div>
+                <div class="col-md-12 text-center mb-3">
+                    <div class="form-group">
+                        <p class="text-center">Already have an account? <a href="{{ url_for('home.login') }}">
+                            Login</a></p>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <button type="submit" class=" btn btn-block mybtn btn-primary tx-tfm" id="signin">SIGN UP
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        function vailRepassword() {
+            if ($("#password").val() != $("#repassword").val()) {
+                $("#repassword").css("border-color", "red");
+                $("#password").css("box--color", "red");
+                alert("Password not match");
+                return false;
+            }
+            return true;
+        }
+
+        function vailPhone() {
+            var phone = jQuery("#phn").val();
+            var flag = false;
+            var message = "";
+            var myreg = /^(1\d{10})$/;
+            if (phone == '') {
+                message = "手机号码不能为空！";
+            } else if (phone.length != 11) {
+                message = "请输入有效的手机号码！";
+            } else if (!myreg.test(phone)) {
+                message = "请输入有效的手机号码！";
+            } else {
+                flag = true;
+            }
+            if (!flag) {
+                $("#phn").css("border-color", "red");
+                {#alert(message);#}
+            } else {
+                $("#phn").css("border-color", "green");
+            }
+            return flag;
+        }
+
+        function vailEmail() {
+            var email = jQuery("#email").val();
+            var flag = false;
+            var message = "";
+            var myreg = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+            if (email == '') {
+                message = "邮箱不能为空！";
+            } else if (!myreg.test(email)) {
+                message = "请输入有效的邮箱地址！";
+            } else {
+                flag = true;
+            }
+            if (!flag) {
+                $("#email").css("border-color", "red");
+                {#alert(message);#}
+            } else {
+                $("#email").css("border-color", "green");
+            }
+            return flag;
+        }
+
+        function vailUsername() {
+            var username = jQuery("#username").val();
+            var flag = false;
+            var message = "";
+            var myreg = /^[a-zA-Z0-9_-]{4,37}$/;
+            if (username == '') {
+                message = "用户名不能为空！";
+            } else if (!myreg.test(username)) {
+                message = "用户名只能由4-37位字母、数字、下划线和减号组成！";
+            } else {
+                flag = true;
+            }
+            if (!flag) {
+                $("#username").css("border-color", "red");
+                {#alert(message);#}
+            } else {
+                $("#username").css("border-color", "green");
+            }
+            return flag;
+        }
+
+        {#$('#pass').keyup(function () {#}
+        {#    var strongRegex = new RegExp("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$", "g");#}
+        {#    var mediumRegex = new RegExp("^(?=.{7,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$", "g");#}
+        {#    var enoughRegex = new RegExp("(?=.{6,}).*", "g");#}
+        {#    if (false == enoughRegex.test($(this).val())) {#}
+        {#        $('#level').removeClass('pw-weak');#}
+        {#        $('#level').removeClass('pw-medium');#}
+        {#        $('#level').removeClass('pw-strong');#}
+        {#        $('#level').addClass(' pw-defule');              //密码小于六位的时候，密码强度图片都为灰色#}
+        {#    } else if (strongRegex.test($(this).val())) {#}
+        {#        $('#level').removeClass('pw-weak');#}
+        {#        $('#level').removeClass('pw-medium');#}
+        {#        $('#level').removeClass('pw-strong');#}
+        {#        $('#level').addClass(' pw-strong');#}
+        {#        // 密码为八位及以上并且字母数字特殊字符三项都包括,强度最强#}
+        {#    } else if (mediumRegex.test($(this).val())) {#}
+        {#        $('#level').removeClass('pw-weak');#}
+        {#        $('#level').removeClass('pw-medium');#}
+        {#        $('#level').removeClass('pw-strong');#}
+        {#        $('#level').addClass(' pw-medium');#}
+        {#        // 密码为七位及以上并且字母、数字、特殊字符三项中有两项，强度是中等#}
+        {#    } else {#}
+        {#        $('#level').removeClass('pw-weak');#}
+        {#        $('#level').removeClass('pw-medium');#}
+        {#        $('#level').removeClass('pw-strong');#}
+        {#        $('#level').addClass('pw-weak');#}
+        {#        // 如果密码为6为及以下，就算字母、数字、特殊字符三项都包括，强度也是弱的#}
+        {#    }#}
+        {#    return true;});#}
+
+        function vailPassword() {
+            var password = jQuery("#password").val();
+            var flag = false;
+            var message = "";
+            {#var lower = /.[a-z]+$/;#}
+            {#var upper = /.[A-Z]+$/;#}
+            {#var dig = /.[0-9]+$/;#}
+            {#var pun = /.[`~!@#$%^&*()_+<>?:"{},.;']+$/;#}
+            var pattern = new RegExp("^(?=.{7,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$", "g");
+
+            if (password == '') {
+                message = "密码不能为空！";
+            } else if (!pattern.test(password)) {
+                message = "密码必须至少包含小写字母和数字";
+            } else {
+                flag = true;
+            }
+            if (!flag) {
+                $("#password").css("border-color", "red");
+                {#alert(message);#}
+            } else {
+                $("#password").css("border-color", "green");
+            }
+            return flag;
+        }
+
+        $("#password").blur(function () {
+            vailPassword();
+        })
+
+        $("#username").blur(function () {
+            vailUsername();
+        })
+
+        $("#email").blur(function () {
+            vailEmail();
+        })
+
+        $("#phn").blur(function () {
+            vailPhone();
+        })
+
+
+        $('#password').bind('input propertychange', function () {
+            $("#password").css("border-color", "");
+            if ($("#password").val() == $("#repassword").val()) {
+                $("#repassword").css("border-color", "green");
+            } else {
+                $("#repassword").css("border-color", "red");
+            }
+        });
+
+        $("#repassword").bind('input propertychange', function () {
+            if ($("#password").val() == $("#repassword").val() && vailPassword()) {
+                $("#repassword").css("border-color", "green");
+            } else if (vailPassword()) {
+                $("#repassword").css("border-color", "red");
+            }
+        })
+
+
+        $("#signin").click(function () {
+                $("#second").fadeOut("fast", function () {
+                    $("#first").fadeIn("fast");
+                });
+
+                var un = $("#username").val();
+                var em = $("#email").val();
+                var phn = $("#phn").val();
+                var pass = $("#password").val();
+                var repass = $("#repassword").val();
+
+
+                if (phn == '' || pass == '' || repass == '' || un == '' || em == '') {
+                    alert("Please fill all the fields");
+                    return;
+                } else if (!vailPassword()) {
+                    alert("密码必须包含大写字母、小写字母、数字和特殊字符中的至少三种！");
+                    return;
+                } else if (!vailEmail()) {
+                    alert("邮箱格式不正确！");
+                    return;
+                } else if (!vailUsername()) {
+                    alert("用户名格式不正确");
+                    return;
+                } else if (!vailRepassword()) {
+                    alert("两次密码不一致！");
+                    return;
+                } else {
+                    data = {
+                        "flag": "signin",
+                        "username": un,
+                        "email": em,
+                        "phone": phn,
+                        "password": pass,
+                        "repassword": repass
+                    };
+
+                    from = window.location.search.substring(16);
+                    if (from[0] === '/') {
+                        from = from.substring(1);
+                    }
+
+                    $.ajax({
+                        url: '{{ url_for("home.register") }}',
+                        data: JSON.stringify(data),
+                        type: "POST",
+                        dataType: "json",
+                        async: false,
+                        success: function (data) {
+                            if (data.code === 200) {
+                                $("#first").fadeOut("fast", function () {
+                                    $("#second").fadeIn("fast");
+                                });
+                                alert(data.msg);
+                                if (from) {
+                                    window.location.href = "{{ url_for('home.index') }}" + from;
+                                } else {
+                                    window.location.href = "{{ url_for('home.index') }}";
+                                }
+                            } else {
+                                alert(data.msg);
+                            }
+                        },
+                        error: function (data) {
+                            alert("Please chect your internet connection");
+                        }
+                    })
+                }
+
+            }
+        );
+
+
+    </script>
+{% endblock %}

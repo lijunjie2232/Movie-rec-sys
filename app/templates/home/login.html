@@ -1,0 +1,104 @@
+{% extends "home/home.html" %}
+{% block content %}
+    <div class="row" style="margin-top:10%;color:#666">
+        <div class="col-md-6 col-md-offset-3 mx-auto">
+            <div class="myform form" style="padding:7%">
+                <div class="logo mb-3">
+                    <div class="col-md-12 text-center">
+                        <h1>Login</h1>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1"> User Name</label>
+                    <input type="email" name="email" class="form-control" id="email"
+                           aria-describedby="emailHelp" placeholder="Enter Phone Number or Email"
+                           style="border-radius:20px">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1"> Password</label>
+                    <input type="password" name="password" id="password" class="form-control"
+                           aria-describedby="emailHelp" placeholder="Enter Password"
+                           style="border-radius:20px">
+                </div>
+                <div class="col-md-12 text-center" style="margin-top: 10px; margin-bottom:20px; text-align:center">
+                    <p id="tips" style="color:red"></p>
+                </div>
+
+                <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-block mybtn btn-primary tx-tfm" id="login">Login
+                    </button>
+                </div>
+                <div class="col-md-12 ">
+                    <div class="login-or">
+                        <hr class="hr-or">
+                        <span class="span-or">OR</span>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <p class="text-center">
+                        <a href="{{ url_for('home.register') }}" class="google btn mybtn" id="signup"><i
+                                class="fa fa-google-plus">
+                        </i> SIGN UP
+                        </a>
+                    </p>
+                </div>
+                <div class="form-group">
+                    <p class="text-center">Forget password? <a href="{{ url_for('home.register') }}" id="findpsw"> You deserve it!</a></p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        {#alert($.md5("www.jb51.net"));#}
+
+        $("#login").click(function () {
+            $("#second").fadeOut("fast", function () {
+                $("#first").fadeIn("fast");
+            });
+
+            function getQueryString(name) {
+                const str = new URL(url);
+                return str.searchParams.get(name);
+            };
+
+            from = window.location.search.substring(16);
+            if (from[0] === '/') {
+                from = from.substring(1);
+            }
+
+            $.ajax({
+                url:{{ url_for('home.login') }},
+                data: JSON.stringify({
+                    "flag": "loginin",
+                    "n": $("#email").val(),
+                    "p": $("#password").val()
+                }),
+                type: "POST",
+                dataType: "json",
+                success: function (data) {
+                    if (data.code === 200) {
+                        alert(data.msg);
+                        if (from) {
+                            window.location.href = "{{ url_for('home.index') }}" + from;
+                        } else {
+                            window.location.href = "{{ url_for('home.index') }}";
+                        }
+                    } else {
+                        alert(data.msg)
+                    }
+                },
+                error: function (data) {
+                    alert("Please check your network!")
+                }
+
+
+            })
+
+
+        });
+
+
+    </script>
+{% endblock %}

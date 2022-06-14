@@ -1,0 +1,497 @@
+{% extends "home/home.html" %}
+
+{% block css %}
+    <!--播放页面-->
+    {#    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='jwplayer/skins/stormtrooper.css') }}">#}
+    <script type="text/javascript" src="{{ url_for('static',filename='ueditor/ueditor.config.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='ueditor/ueditor.all.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='ueditor/lang/zh-cn/zh-cn.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='ueditor/themes/iframe.css') }}">
+    {#    <script>#}
+    {#        SyntaxHighlighter.all();#}
+    {#    </script>#}
+    <!--播放页面-->
+    <style>
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            padding-right: 3px;
+            padding-left: 3px;
+        }
+        .comment-main{
+            border-radius: 17px;
+        }
+        .comment-header{
+            border-radius: 17px 17px 0 0;
+        }
+        .comment-body{
+            border-radius: 0 0 17px 17px;
+        }
+
+
+    </style>
+{% endblock %}
+{% block content %}
+
+    <div class="row" style="margin-top:20px">
+        <div class="col-md-4">
+            <a target="_blank" href="{{ movie.poster }}">
+                <img class="media-object" src="{{ movie.poster }}" alt="Poster temporarily unavailable"
+                     height="573" width="100%" style=" border-radius: 17px">
+            </a>
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-info" style="height:573px; border-radius: 17px">
+                <div class="panel-heading" style="border-radius: 17px 17px 0 0">
+                    <div class="panel-title"><span class="glyphicon glyphicon-facetime-video"></span>&nbsp;Film
+                        Information
+                        <a id="play" target="_blank" href="https://www.imdb.com/title/{{ movie.urlId }}"
+                           value="{{ movie.urlId }}"
+                           class="label label-success pull-right"
+                           style="width:77px; padding: 6px; float: right; border-radius: 17px"><span
+                                class="glyphicon glyphicon-play"></span> Play</a></div>
+                </div>
+                <div class="panel-body" style="height:100%;">
+                    <table class="table">
+                        <tr>
+                            <td style="width:20%;color:#ccc;font-weight:bold;font-style:italic;">
+                                <span class="glyphicon glyphicon-film"></span>&nbsp;Title
+                            </td>
+                            <td id="id" value="{{ movie.id }}">{{ movie.web_name }}</td>
+                        </tr>
+                        <tr>
+                            <td style="color:#ccc;font-weight:bold;font-style:italic;">
+                                <span class="glyphicon glyphicon-tag"></span>&nbsp;Genres
+                            </td>
+                            <td style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;padding-right: 10px">{{ movie.genres }}</td>
+                        </tr>
+                        <tr>
+                            <td style="color:#ccc;font-weight:bold;font-style:italic;">
+                                <span class="glyphicon glyphicon-time"></span>&nbsp;Actors
+                            </td>
+                            <td>{{ movie.actors }}</td>
+                        </tr>
+                        <tr>
+                            <td style="color:#ccc;font-weight:bold;font-style:italic;">
+                                <span class="glyphicon glyphicon-time"></span>&nbsp;Duration
+                            </td>
+                            <td>{{ movie.duration }} (minute)</td>
+                        </tr>
+                        <tr>
+                            <td style="color:#ccc;font-weight:bold;font-style:italic;">
+                                <span class="glyphicon glyphicon-map-marker"></span>&nbsp;Language
+                            </td>
+                            <td>{{ movie.lang }}</td>
+                        </tr>
+                        <tr>
+                            <td style="color:#ccc;font-weight:bold;font-style:italic;">
+                                <span class="glyphicon glyphicon-star"></span>&nbsp;Rate
+                            </td>
+                            <td>{{ movie.rate }}</td>
+                        </tr>
+                        <tr>
+                            <td style="color:#ccc;font-weight:bold;font-style:italic;">
+                                <span class="glyphicon glyphicon-calendar"></span>&nbsp;Release Year
+                            </td>
+                            <td>{{ movie.year }}</td>
+                        </tr>
+                        <tr>
+                            <td style="color:#ccc;font-weight:bold;font-style:italic;">
+                                <span class="glyphicon glyphicon-play"></span>&nbsp;Play Counts
+                            </td>
+                            <td>{{ movie.playnum }}</td>
+                        </tr>
+                        <tr>
+                            <td style="color:#ccc;font-weight:bold;font-style:italic;">
+                                <span class="glyphicon glyphicon-picture"></span>&nbsp;Story Line
+                            </td>
+                            <td>{{ movie.storyline|safe }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12" style="margin-top:6px;height:auto; padding-bottom:10px">
+            <div class="panel panel-success" style="border-radius: 17px">
+                <div class="panel-heading" style="border-radius: 17px 17px 0 0">
+                <span class="panel-title"><span class="	glyphicon glyphicon-film"></span>&nbsp;Movie
+                    Recommendation</span>
+
+                    <a class="panel-title" style="float: right;" id="refresh" onclick="rec()"><span
+                            class="glyphicon glyphicon-refresh"></span></a>
+
+                </div>
+                <div class="panel-body" id="rec-body">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12" style="margin-top:6px;">
+            <div class="panel panel-danger" style="border-radius: 17px">
+                <div class="panel-heading" style="border-radius: 17px 17px 0 0;">
+                    <h3 class="panel-title"><span class="glyphicon glyphicon-comment"></span>&nbsp;Comments</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12" style="margin-top:7px;">
+                        <ul class="commentList" id="comment-body">
+                            {#                            <li class="item cl">#}
+                            {#                                <a href="">#}
+                            {#                                    <i class="avatar size-L radius">#}
+                            {#                                        <img alt="50x50"#}
+                            {#                                             src="{{ url_for('static', filename='static/base/images/header.png') }}"#}
+                            {#                                             class="img-circle"#}
+                            {#                                             style="border:1px solid #abcdef;width:50px;height:50px;">#}
+                            {#                                    </i>#}
+                            {#                                </a>#}
+                            {#                                <div class="comment-main">#}
+                            {#                                    <header class="comment-header">#}
+                            {#                                        <div class="comment-meta">#}
+                            {#                                            <a class="comment-author" href="user.html">xiaoli</a>#}
+                            {#                                            评论于#}
+                            {#                                            <time title="" datetime="2016-12-07 09:12:51">2017-03-01#}
+                            {#                                                09:12:51#}
+                            {#                                            </time>#}
+                            {#                                        </div>#}
+                            {#                                    </header>#}
+                            {#                                    <div class="comment-body">#}
+                            {#                                        <p>这电影真好看！</p>#}
+                            {#                                    </div>#}
+                            {#                                </div>#}
+                            {#                            </li>#}
+                        </ul>
+                    </div>
+
+                    <div class="col-md-12 text-center" style="margin-top:17px;display:none;" id="page_ctl">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li>
+                                    <a aria-label="First" onclick="page_first()"
+                                       style="border-radius: 27px 0 0 27px;width:77px;">
+                                        <span aria-hidden="true">首页</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a aria-label="Previous" onclick="page_previous()">
+                                        <span aria-hidden="true">上一页</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a>
+                                        <span id="page" value=""></span>
+                                        &nbsp;/&nbsp;
+                                        <span id="num" value=""></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a aria-label="Next" onclick="page_next()">
+                                        <span aria-hidden="true">下一页</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a aria-label="Last" onclick="page_last()"
+                                       style="border-radius: 0 27px 27px 0;width:77px;">
+                                        <span aria-hidden="true">尾页</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    {% if user %}
+                        <div class="col-md-12" style="margin-top:27px; text-align:center">
+                            <script id="editor" type="text/plain" style="height:256px;">
+                                <p style="color:silver">文明发言,若有违反，后果将由您自行承担。</p>
+                            </script>
+                            <bottom class="btn btn-pink pull-right"
+                                    style="margin-right:17px;width:77px;border-radius:17px;border: 0;" id="uedi_submit">
+                                Submit
+                            </bottom>
+
+                            <script type="text/javascript">
+                                {#serverUrl:"/comments/"#}
+                                var ue = UE.getEditor('editor', {
+                                    {#toolbars: [#}
+                                    {#    ['undo', 'redo', '|',#}
+                                    {#        'bold', 'italic', 'underline', 'strikethrough', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', '|', 'rowspacingtop', 'rowspacingbottom', 'lineheight'],#}
+                                    {#    ['customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',#}
+                                    {#        'directionalityltr', 'directionalityrtl', 'indent', '|',#}
+                                    {#        'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',#}
+                                    {#        'link', 'unlink'],#}
+                                    {##}
+                                    {#],#}
+                                    toolbars: [[
+                                        'undo', 'redo', '|', 'drafts', '|',
+                                        'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
+                                        'rowspacingtop', 'rowspacingbottom', 'lineheight'], ['|',
+                                        'customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
+                                        'directionalityltr', 'directionalityrtl', 'indent', '|',
+                                        'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
+                                        'link', 'unlink'], ['|', 'insertcode', '|',
+                                        'horizontal', 'date', 'time', 'spechars', 'snapscreen', 'wordimage', '|',
+                                        'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
+                                        'print', 'searchreplace', 'help', '|', 'fullscreen', 'source',
+                                    ]],
+                                    enableAutoSave: true,
+                                    saveInterval: 60000,
+                                    maximumWords: 10000,
+                                    elementPathEnabled: false,
+                                    initialFrameWidth: null,
+                                    autoHeightEnabled: false,//是否自动长高
+                                    autoFloatEnabled: false,//是否保持toolbar的位置不动
+                                    autoClearinitialContent: true,//是否自动清除编辑器初始内容
+                                    {#zIndex: 4,#}
+                                    {#serverUrl: "/",#}
+                                });
+
+                            </script>
+                            <script type="text/javascript">
+                                function article_save_submit() {
+                                    <!--获取ueditor内荣，后台属性驱动或对象驱动即可-->
+                                    var content = UE.getEditor('editor').getContent();
+                                    alert(content)
+                                    $.ajax({
+                                        url: "{{ url_for('home.comments') }}",
+                                        data: JSON.stringify({
+                                            "action": "add",
+                                            "movie_id":{{ movie.id }},
+                                            "user_id": {{ user.id }},
+                                            "content": content
+                                        }),
+                                        dataType: "json",
+                                        type: "POST",
+                                        success: function (data) {
+                                            if (data.code == 200) {
+                                                alert(data.msg);
+                                                location.reload();
+                                            } else {
+                                                alert(data.msg);
+                                            }
+                                        },
+                                        error: function () {
+                                            alert("Please chect your internet connection");
+                                        }
+                                    });
+                                }
+
+                                $("#uedi_submit").click(function () {
+                                    article_save_submit();
+                                });
+                            </script>
+                        </div>
+                    {% else %}
+                        <div class="col-md-12" style="margin-top:27px;">
+                            <div class="panel panel-default" style="border: 0; border-radius:17px;">
+                                <div class="panel-heading"
+                                     style="border: 0;border-radius: 17px 17px 0 0;text-align:center">
+                                    <h3 class="panel-title">
+                                        Plese
+                                        <a href="{{ url_for('home.login') }}?redirectedfrom=play/{{ movie.id }}">Login</a>
+                                        to Comment
+                                    </h3>
+                                </div>
+                                <div class="panel-body"
+                                     style="border: 0; border-radius: 0 0 17px 17px;background-color:#dfe6e9;text-align:center">
+                                    <a class="btn btn-pink pull-center"
+                                       href="{{ url_for('home.login') }}?redirectedfrom=play/{{ movie.id }}"
+                                       style="width:77px;border-radius:17px;border: 0;">Login
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var url = window.location.href;
+        var page = 1;
+        var num = 1;
+
+
+        function rec() {
+            var id = Number($("#id").attr("value"));
+            var prc = window.location.protocol;
+            var host = window.location.host;
+            url = prc + "//" + host + "/rec/" + "?id=" + id;
+            console.log(url);
+            $.ajax({
+                url: url,
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    $("#rec-body").empty();
+                    if (data.code == 200) {
+                        j = JSON.parse(data["rec"])
+                        for (var i = 0; i < j.length; i++) {
+                            var v = j[i];
+                            var p = v.poster;
+                            var n = v.title;
+                            if (n.length > 50) {
+                                n = n.substring(0, 65) + "...";
+                            }
+                            var u = v.id;
+                            var w = v.urlId;
+                            var item = "<div class=\"col-md-3\" style=\"height:520px;margin-top:10px;margin-bottom:10px;background-color:#ffffff\"><div class=\"movielist text-center\"  style=\"background:#ffffff;\"><a href=\"http://127.0.0.1:5000/play/" + u + "\"><img src=\"" + p + "\" class=\"img-responsive center-block\" alt=\"Poster temporarily unavailable\" style=\"border-radius:27px;padding:5px;wight:auto;height:383px;text-align:center;\"></a><div class=\"text-left\" style=\"margin-left:auto;margin-right:auto;margin:5px;height:50px\"><a href=\"http://127.0.0.1:5000/play/" + u + "\"><span style=\"color:#999;font-style:italic;float:left;height:65px;padding:10px;\">" + n + "</span></a></div><a class=\"btn btn-success\" target=\"_blank\" href=\"https://www.imdb.com/title/" + w + "\" id=\"play\" value=\"" + w + "\" role=\"button\" style=\"width:87%;border-radius:27px;\"><span class=\"glyphicon glyphicon-play\"></span> Play</a></div></div>"
+                            $("#rec-body").append(item);
+                            {#console.log(item);#}
+                        }
+                    } else {
+                        alert(data.msg);
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                    setTimeout(function () {
+                        rec();
+                    }, 1000);
+                },
+            });
+        }
+
+        function get_comments(page) {
+            data = {
+                "action": "get_movie_comments",
+                "movie_id": {{ movie.id }},
+                "page": page
+            }
+            $.ajax({
+                url: {{ url_for('home.comments') }},
+                type: "POST",
+                dataType: "json",
+                data: JSON.stringify(data),
+                success: function (data) {
+                    if (data.code === 200) {
+                        page = data["page"];
+                        num = data["num"];
+                        $("#comment-body").empty();
+                        var comments = '';
+                        var len = data["comments"].length;
+                        if (len) {
+                            for (var i = 0; i < len; i++) {
+                                var v = data["comments"][i];
+                                var u = v.user;
+                                var c = v.content;
+                                var t = v.timestamp;
+                                var item = "<li class=\"item cl\"><a href=\"\"><i class=\"avatar size-L radius\"><img alt=\"50x50\"src=\"{{ url_for('static', filename='static/base/images/header.png') }}\"class=\"img-circle\"style=\"border:1px solid #abcdef;width:50px;height:50px;\"></i></a><div class=\"comment-main\"><header class=\"comment-header\"><div class=\"comment-meta\"><a class=\"comment-author\"href=\"user.html\">" + u + "</a>评论于<time title=\"\"datetime=\"" + t + "\"> " + t + " </time></div></header><div class=\"comment-body\">" + c + "</div></div></li>";
+                                comments += item;
+                            }
+                            $("#comment-body").append(comments);
+                            $("#page").text(page);
+                            $("#num").text(num);
+                            $("#page_ctl").show();
+                        } else {
+                            {#alert("暂无评论");#}
+                            $("#comment-body").empty();
+                            var comments = '<div style="text-align: center;color:#fd79a8;"><h3>No comment up to now</h3></div>';
+                            $("#comment-body").append(comments);
+                            {#$("#page").text(0);#}
+                            {#$("#num").text(0);#}
+                            {#$("#prev").hide()#}
+                            {#$("#First").hide()#}
+                            {#$("#next").hide()#}
+                            {#$("#Last").hide()#}
+                            {#$("#page_ctl").hide();#}
+                        }
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                    alert("Please chect your network!");
+                },
+            });
+        }
+
+        function page_first() {
+            if (page > 1) {
+                get_comments(1);
+            } else {
+                alert('Already the first page');
+            }
+        }
+
+        function page_last() {
+            if (page < num) {
+                get_comments(num);
+            } else {
+                alert('Already the last page');
+            }
+        }
+
+        function page_previous() {
+            if (page > 1) {
+                get_comments(page - 1);
+            } else {
+                alert('Already the first page');
+            }
+        }
+
+        function page_next() {
+            if (page < num) {
+                get_comments(page + 1);
+            } else {
+                alert('Already the last page');
+            }
+        }
+
+        $(document).ready(function () {
+            $("img.lazy").lazyload({
+                effect: "fadeIn"
+            });
+            rec();
+            get_comments(page);
+            if (window.location.pathname.indexOf("/play") >= 0) {
+                {#rec();#}
+            }
+        });
+
+    </script>
+
+
+{% endblock %}
+
+{% block js %}
+
+
+    <!--播放页面-->
+    {#    <script src="../static/jwplayer/jwplayer.js"></script>#}
+    {#    <script>#}
+    {#        var ue = UE.getEditor('input_content', {#}
+    {#            toolbars: [#}
+    {#                ['fullscreen', 'emotion', 'preview', 'link']#}
+    {#            ],#}
+    {#            initialFrameWidth: "100%",#}
+    {#            initialFrameHeight: "100",#}
+    {#        });#}
+    {#    </script>#}
+    {#    <script type="text/javascript">#}
+    {#        jwplayer.key = "P9VTqT/X6TSP4gi/hy1wy23BivBhjdzVjMeOaQ==";#}
+    {#    </script>#}
+    {#    <script type="text/javascript">#}
+    {#        jwplayer("moviecontainer").setup({#}
+    {#            flashplayer: "{{url_for('static',filename='jwplayer/jwplayer.flash.swf')}}",#}
+    {#            playlist: [{#}
+    {#                file: "{{url_for('static',filename='video/htpy.mp4')}}",#}
+    {#                title: "环太平洋"#}
+    {#            }],#}
+    {#            modes: [{#}
+    {#                type: "html5"#}
+    {#            }, {#}
+    {#                type: "flash",#}
+    {#                src: "{{url_for('static',filename='jwplayer/jwplayer.flash.swf')}}"#}
+    {#            }, {#}
+    {#                type: "download"#}
+    {#            }],#}
+    {#            skin: {#}
+    {#                name: "vapor"#}
+    {#            },#}
+    {#            "playlist.position": "left",#}
+    {#            "playlist.size": 400,#}
+    {#            height: 500,#}
+    {#            width: 774,#}
+    {#        });#}
+    {#    </script>#}
+    <!--播放页面-->
+    {#{% endblock %}#}
+    {##}
+    {#{% block ueditor_js %}#}
+
+{% endblock %}

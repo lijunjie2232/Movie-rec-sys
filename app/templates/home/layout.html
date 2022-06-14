@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1 , user-scalable=no">
+    <title>Movie System</title>
+    <link rel="shortcut icon" href="{{ url_for('static',filename='/base/images/logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='base/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='base/css/bootstrap-movie.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='base/css/animate.css') }}">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <style>
+        .navbar-brand > img {
+            display: inline;
+        }
+
+        .media {
+            padding: 3px;
+            border: 1px solid #ccc
+        }
+
+
+        .buscar-caja {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            border-radius: 40px;
+            padding: 10px;
+        }
+
+        .buscar-caja:hover > .buscar-txt {
+            width: 240px;
+            padding: 0 6px;
+        }
+
+        .buscar-caja:hover > .buscar-btn {
+            background: white;
+            color: #fd79a8;
+        }
+
+        .buscar-btn {
+
+            float: right;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #fd79a8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.4s;
+            color: white;
+            cursor: pointer;
+        }
+
+        .buscar-btn > i {
+            font-size: 17px;
+        }
+
+        .buscar-txt {
+            border: none;
+            background: none;
+            outline: none;
+            float: left;
+            padding: 0;
+            color: #333;
+            font-size: 16px;
+            transition: 0.4s;
+            line-height: 40px;
+            width: 0px;
+            border-radius: 40px;
+            font-weight: bold;
+        }
+
+        .buscar-txt:hover, .buscar-txt:focus {
+            border: 1px solid #fd79a8;
+        }
+
+        .label-light {
+            background: #fff;
+            color: #fd79a8;
+        }
+
+        .label-light:hover {
+            background: #fd79a8;
+            color: #fff;
+        }
+
+        .label-pink {
+            background: #fd79a8;
+            color: #fff;
+        }
+
+        .label-pink:hover {
+            background: pink;
+        }
+
+
+    </style>
+    {% block css %}
+    {% endblock %}
+</head>
+
+<body>
+<!--导航-->
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <!--小屏幕导航按钮和logo-->
+        <div class="navbar-header">
+            <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="{{ url_for('home.index') }}" class="navbar-brand" style="width:auto;color:#b2bec3">
+                <img src="{{ url_for('static',filename='static/base/images/logo.png') }}" style="height:30px;">
+                Movie System
+            </a>
+        </div>
+        <!--小屏幕导航按钮和logo-->
+        <!--导航-->
+        <div class="navbar-collapse collapse">
+            {#            <div class="navbar-form navbar-left" role="search" style="margin-top:18px">#}
+            {#                <div class="form-group input-group" style="border:1px solid #ccc">#}
+            {#                    <input type="text" class="form-control" id="search_text" placeholder="Please enter key words"#}
+            {#                           style="display: inline-block;">#}
+            {#                    <button style="border-radius:0px 37px 37px 0px;border:0 none; display: inline-block; inline-height: inherit;">#}
+            {#                        Search#}
+            {#                    </button>#}
+            {#                        <i id="search"><span#}
+            {#                                class="glyphicon glyphicon-search"></span>&nbsp;Search</i>#}
+            {#                    </button>#}
+            {#                </div>#}
+            {#            </div>#}
+            <div class="buscar-caja">
+                <input type="text" name="search_text" id="search_text" class="buscar-txt" placeholder="Search"/>
+                <a class="buscar-btn" id="search"> <i class="fa fa-search"></i> </a>
+            </div>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="curlink" href="{{ url_for('home.index') }}"><span class="glyphicon glyphicon-film"></span>&nbsp;Film</a>
+                </li>
+                {% if user %}
+                    <li>
+                        <a class="curlink" href="{{ url_for('home.user') }}" style="color:#fd79a8"><span
+                                class="glyphicon glyphicon-user"></span>&nbsp;
+                            {{ user.name }}
+                        </a>
+                    </li>
+                    <li>
+                        <a class="curlink" href="{{ url_for('home.logout') }}?redirectedfrom={{ route }}"><span
+                                class="glyphicon glyphicon-log-out"></span>&nbsp;Exit</a>
+                    </li>
+
+                {% else %}
+                    <li>
+                        <a class="curlink" href="{{ url_for('home.register') }}?redirectedfrom={{ route }}"><span
+                                class="glyphicon glyphicon-plus"></span>&nbsp;Regist</a>
+                    </li>
+                    <li>
+                        <a class="curlink" href="{{ url_for('home.login') }}?redirectedfrom={{ route }}"><span
+                                class="glyphicon glyphicon-log-in"></span>&nbsp;Login</a>
+                    </li>
+                    <li>
+                        <a class="curlink" href="{{ url_for('home.user') }}"><span
+                                class="glyphicon glyphicon-user"></span>&nbsp;
+                            Guest
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+        <!--导航-->
+
+    </div>
+</nav>
+<!--导航-->
+<!--内容-->
+{% block content %}
+
+{% endblock %}
+<!--内容-->
+<!--底部-->
+{#<footer class="mt-4 bg-dark text-light small">#}
+{#    <div class="container">#}
+{#        <div class="row">#}
+{#            <div class="col-md-12">#}
+{#                <p>#}
+{#                    ©&nbsp;2022&nbsp;movie.rec.com&nbsp;Modified by @lijunjie2232&nbsp;xxICP备 xxxxxxxx号-xx#}
+{#                </p>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</footer>#}
+<!--底部-->
+<script src="{{ url_for('static',filename='base/js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static',filename='base/js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static',filename='base/js/jquery.singlePageNav.min.js') }}"></script>
+<script src="{{ url_for('static',filename='base/js/wow.min.js') }}"></script>
+<script src="{{ url_for('static',filename='lazyload/jquery.lazyload.min.js') }}"></script>
+<script src="//cdn.bootcss.com/holder/2.9.4/holder.min.js"></script>
+<script>
+    $(function () {
+        new WOW().init();
+    })
+
+</script>
+<script>
+    $(document).ready(function () {
+        $("img.lazy").lazyload({
+            effect: "fadeIn"
+        });
+    });
+
+</script>
+
+<script>
+    var url = window.location.href;
+
+    function getQueryString(name) {
+        const str = new URL(url);
+        return str.searchParams.get(name);
+    }
+
+    var genre = getQueryString('genre');
+    var lang = getQueryString('lang');
+    var year = getQueryString('year');
+    var hot = getQueryString('hot');
+    var time = getQueryString('time');
+    var page = {{ page }};
+    var num = {{ num }};
+
+    if (!page || page < 1) {
+        page = 1;
+    }
+
+    function getUrl(p = page, g = genre, l = lang, y = year, h = hot, t = time) {
+        var url = '{{ url_for('home.index') }}';
+        if (p) {
+            if (p > num) {
+                url += '?page=' + num;
+            } else if (p < 1) {
+                url += '?page=1';
+            } else {
+                url += '?page=' + p;
+            }
+        } else {
+            url += '?page=1';
+        }
+        if (g) {
+            url += '&genre=' + g;
+        }
+        if (l) {
+            url += '&lang=' + l;
+        }
+        if (y) {
+            url += '&year=' + y;
+        }
+        if (h) {
+            url += '&hot=' + h;
+        }
+        if (t) {
+            url += '&time=' + t;
+        }
+        return url;
+    }
+
+    {#genre_js#}
+    $('[id="lang"]').each(function () {
+        if (lang == this.getAttribute('value')) {
+            $(this).removeClass('label-light');
+            $(this).addClass('label-pink');
+        }
+    });
+
+    $('[id="lang"]').click(function () {
+        if (lang != this.getAttribute('value')) {
+            $('[id="lang"]').each(function () {
+                $(this).removeClass('label-pink');
+            });
+            $(this).removeClass('label-light');
+            $(this).addClass('label-pink');
+            lang = this.getAttribute('value');
+            {#alert('genre selected');#}
+        } else {
+            $(this).removeClass('label-pink');
+            $(this).addClass('label-light');
+            lang = null;
+            {#alert('lang unselected');#}
+        }
+        page = 1;
+        window.location.href = getUrl();
+    });
+
+
+    {#genre_js#}
+    $('[id="genre"]').each(function () {
+        if (genre == this.getAttribute('value')) {
+            $(this).removeClass('label-light');
+            $(this).addClass('label-pink');
+        }
+    });
+
+    $('[id="genre"]').click(function () {
+        if (genre != this.getAttribute('value')) {
+            $('[id="genre"]').each(function () {
+                $(this).removeClass('label-pink');
+            });
+            $(this).removeClass('label-light');
+            $(this).addClass('label-pink');
+            genre = this.getAttribute('value');
+            {#alert('genre selected');#}
+        } else {
+            $(this).removeClass('label-pink');
+            $(this).addClass('label-light');
+            genre = null;
+            {#alert('genre unselected');#}
+        }
+        page = 1;
+        window.location.href = getUrl();
+    });
+
+    {#year_js#}
+    $('[id="year"]').each(function () {
+        if (year == this.getAttribute('value')) {
+            $(this).removeClass('label-light');
+            $(this).addClass('label-pink');
+        }
+    });
+
+    $('[id="year"]').click(function () {
+        if (year != this.getAttribute('value')) {
+            $('[id="year"]').each(function () {
+                $(this).removeClass('label-pink');
+            });
+            $(this).removeClass('label-light');
+            $(this).addClass('label-pink');
+            year = this.getAttribute('value');
+            {#alert('year selected');#}
+        } else {
+            $(this).removeClass('label-pink');
+            $(this).addClass('label-light');
+            year = null;
+            {#alert('year unselected');#}
+        }
+        page = 1;
+        window.location.href = getUrl();
+    });
+
+    {#hot_js#}
+    $('[id="hot"]').each(function () {
+        if (hot == this.getAttribute('value')) {
+            $(this).removeClass('label-light');
+            $(this).addClass('label-pink');
+        }
+    });
+
+    $('[id="hot"]').click(function () {
+        if (hot != this.getAttribute('value')) {
+            $('[id="hot"]').each(function () {
+                $(this).removeClass('label-pink');
+            });
+            $(this).removeClass('label-light');
+            $(this).addClass('label-pink');
+            hot = this.getAttribute('value');
+            {#alert('hot selected');#}
+        } else {
+            $(this).removeClass('label-pink');
+            $(this).addClass('label-light');
+            hot = null;
+            {#alert('hot unselected');#}
+        }
+        page = 1;
+        window.location.href = getUrl();
+    });
+
+    {#time_js#}
+    $('[id="time"]').each(function () {
+        if (time == this.getAttribute('value')) {
+            $(this).removeClass('label-light');
+            $(this).addClass('label-pink');
+        }
+    });
+
+    $('[id="time"]').click(function () {
+        if (time != this.getAttribute('value')) {
+            $('[id="time"]').each(function () {
+                $(this).removeClass('label-pink');
+            });
+            $(this).removeClass('label-light');
+            $(this).addClass('label-pink');
+            time = this.getAttribute('value');
+            {#alert('time selected');#}
+        } else {
+            $(this).removeClass('label-pink');
+            $(this).addClass('label-light');
+            time = null;
+            {#alert('time unselected');#}
+        }
+        page = 1;
+        window.location.href = getUrl();
+    });
+
+    function page_last() {
+        if (page < num) {
+            window.location.href = getUrl(num);
+        } else {
+            alert('Already the last page');
+        }
+    }
+
+    function page_next() {
+        if (page < num) {
+            window.location.href = getUrl(page + 1);
+        } else {
+            alert('Already the last page');
+        }
+    }
+
+    function page_previous() {
+        if (page > 1) {
+            window.location.href = getUrl(page - 1);
+        } else {
+            alert('Already the first page');
+        }
+    }
+
+    function page_first() {
+        if (page > 1) {
+            window.location.href = getUrl(1);
+        } else {
+            alert('Already the first page');
+        }
+    }
+
+    $('#turn').click(function turn_to_page() {
+        var p = Number($('#page').val());
+        if (p == page) {
+            alert('Already the page');
+        } else if (p >= num) {
+            window.location.href = getUrl(num);
+        } else if (p <= 1) {
+            window.location.href = getUrl(1);
+        } else {
+            window.location.href = getUrl(p);
+        }
+    });
+
+    $('#search').click(function () {
+        keys = $('#search_text').val();
+        keys = keys.replace(' ', '+');
+        {#console.log(keys);#}
+        window.location.href = {{ url_for('home.search') }} +'?keys=' + keys;
+    });
+
+
+</script>
+
+{% block js %}{% endblock %}
+</body>
+</html>
+

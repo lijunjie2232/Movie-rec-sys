@@ -1,0 +1,206 @@
+{% extends "admin/admin.html" %}
+{% block content %}
+    <!--内容-->
+    <section class="content-header">
+        <h1>电影管理</h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> 电影管理</a></li>
+            <li class="active">电影列表</li>
+        </ol>
+    </section>
+    <section class="content" id="showcontent">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-primary">
+                    <div class="box-header" style="height:57px">
+                        <h2 class="box-title" style="margin: 7px">电影列表</h2>
+                        <div class="box-tools">
+                            <div class="input-group input-group-sm" style="width: 200px;">
+                                {#                                    <input type="text" name="table_search" class="form-control pull-right"#}
+                                {#                                           placeholder="请输入关键字...">#}
+                                {#                                    <div class="input-group-btn">#}
+                                {#                                        <button class="btn btn-default"><i class="fa fa-search"></i>#}
+                                {#                                        </button>#}
+                                {#                                    </div>#}
+                                <div class="buscar-caja">
+                                    <input type="text" name="search_text" id="search_text" class="buscar-txt"
+                                           placeholder="Search"/>
+                                    <a class="buscar-btn" id="search"> <i class="fa fa-search"></i> </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body table-responsive no-padding">
+                        {#                            {% for msg in get_flashed_messages(category_filter=['ok']) %}#}
+                        {#                                <div class="alert alert-success alert-dismissible">#}
+                        {#                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>#}
+                        {#                                    {{ msg }}#}
+                        {#                                </div>#}
+                        {#                            {% endfor %}#}
+                        <table class="table table-hover">
+                            <tbody>
+                            <tr>
+                                <th>编号</th>
+                                {#                                <th>标题</th>#}
+                                <th>片长</th>
+                                {#                                <th>标签</th>#}
+                                <th>评分</th>
+                                <th>语言</th>
+                                <th>类型</th>
+                                <th>上映时间</th>
+                                <th>片名</th>
+                                <th></th>
+                            </tr>
+                            {% for v in movies %}
+                                <tr>
+                                    <td>{{ v.id }}</td>
+                                    {#                                    <td><{{ v.title }}/td>#}
+                                    <td>{{ v.duration }}分钟</td>
+                                    {#                                    <td>{{ v.tag.name }}</td>#}
+                                    <td>{{ v.rate }}</td>
+                                    <td>{{ v.lang }}</td>
+                                    <td>{{ v.genres }}</td>
+                                    <td>{{ v.year }}</td>
+                                    <td>{{ v.web_name }}</td>
+                                    <td>
+                                        <a href="{{ url_for('admin.movie_edit',id=v.id) }}" class="label label-success">编辑</a>
+                                        {#                                        &nbsp;#}
+                                        {#                                        <a href="{{url_for('admin.movie_del',id=v.id)}}" class="label label-danger">删除</a>#}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="box-footer" style="height:17px;border-radius:27px;"></div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <nav aria-label="Page navigation" style="text-align: center;">
+                    <ul class="pagination">
+                        <li>
+                            <a aria-label="First" onclick="page_first()"
+                               style="border-radius: 27px 0 0 27px;width:77px">
+                                <span aria-hidden="true">首页</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a aria-label="Previous" onclick="page_previous()">
+                                <span aria-hidden="true">上一页</span>
+                            </a>
+                        </li>
+                        <li><a><span
+                                style="border: 1px solid #007bb6;height:100%;padding:2px;border-radius:17px;"><input
+                                type="number" id="page" value="{{ page }}"
+                                style="width:57px;height:17px;border-radius:17px;border:2px;"><bottom
+                                id="turn"><spam
+                                class="glyphicon glyphicon-chevron-right"></spam></bottom></span>&nbsp;
+                            /&nbsp;
+                            <span id="num" value="{{ num }}">
+                                    {% if num %}
+                                        {{ num }}
+                                    {% else %}
+                                        1
+                                    {% endif %}
+                                </span></a></li>
+                        <li>
+                            <a aria-label="Next" onclick="page_next()">
+                                <span aria-hidden="true">下一页</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a aria-label="Last" onclick="page_last()"
+                               style="border-radius: 0 27px 27px 0;width:77px">
+                                <span aria-hidden="true">尾页</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </section>
+    <!--内容-->
+{% endblock %}
+{% block js %}
+    <script>
+        $(document).ready(function () {
+            $('#g-3').addClass('active');
+            $('#g-3-2').addClass('active');
+        })
+    </script>
+    <script type="text/javascript">
+        var url = window.location.href;
+        var page = {{ page }};
+        var num = {{ num }};
+
+        function getUrl(p = page, key = '') {
+            var url = '{{ url_for('admin.movie_list') }}';
+            if (p) {
+                if (p > num) {
+                    url += '?page=' + num;
+                } else if (p < 1) {
+                    url += '?page=1';
+                } else {
+                    url += '?page=' + p;
+                }
+            } else {
+                url += '?page=1';
+            }
+            if (key != '') {
+                url += '&key=' + key;
+            }
+            return url;
+        }
+
+        function page_last() {
+            if (page < num) {
+                window.location.href = getUrl(num);
+            } else {
+                alert('Already the last page');
+            }
+        }
+
+        function page_next() {
+            if (page < num) {
+                window.location.href = getUrl(page + 1);
+            } else {
+                alert('Already the last page');
+            }
+        }
+
+        function page_previous() {
+            if (page > 1) {
+                window.location.href = getUrl(page - 1);
+            } else {
+                alert('Already the first page');
+            }
+        }
+
+        function page_first() {
+            if (page > 1) {
+                window.location.href = getUrl(1);
+            } else {
+                alert('Already the first page');
+            }
+        }
+
+        $('#turn').click(function turn_to_page() {
+            var p = Number($('#page').val());
+            if (p == page) {
+                alert('Already the page');
+            } else if (p >= num) {
+                window.location.href = getUrl(num);
+            } else if (p <= 1) {
+                window.location.href = getUrl(1);
+            } else {
+                window.location.href = getUrl(p);
+            }
+        });
+
+        $('#search').click(function () {
+            keys = $('#search_text').val();
+            keys = keys.replace(' ', '+');
+            window.location.href = getUrl(1, keys);
+        });
+    </script>
+{% endblock %}
