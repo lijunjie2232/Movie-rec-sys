@@ -1,6 +1,6 @@
 # Movie-rec-sys
 ## <font color=blue> This is my undergraduate graduation design project</font>
-Movie recommendation system  modified from https://github.com/hfuuss/python-movie.
+Movie recommendation system modified from https://github.com/hfuuss/python-movie, using Python Flask framwork.
 
 
 Using NCF model to predict recommendation, details please visit https://github.com/lijunjie2232/NCF-Rec-Sys.
